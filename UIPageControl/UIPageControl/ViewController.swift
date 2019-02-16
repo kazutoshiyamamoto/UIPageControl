@@ -25,24 +25,32 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         
         self.view.addSubview(scrollView)
         
-        let menu1 = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 200))
-        menu1.backgroundColor = UIColor.cyan
-        scrollView.addSubview(menu1)
+        let view1 = UIView(frame: CGRect(x: self.view.frame.size.width, y: 0, width: self.view.frame.size.width, height: 200))
+        view1.backgroundColor = UIColor.cyan
+        scrollView.addSubview(view1)
         
-        let menu2 = UIView(frame: CGRect(x: self.view.frame.size.width, y: 0, width: self.view.frame.size.width, height: 200))
-        menu2.backgroundColor = UIColor.red
-        scrollView.addSubview(menu2)
+        let view2 = UIView(frame: CGRect(x: self.view.frame.size.width*2, y: 0, width: self.view.frame.size.width, height: 200))
+        view2.backgroundColor = UIColor.red
+        scrollView.addSubview(view2)
+        
+        let button = UIButton()
+        button.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 200)
+        button.backgroundColor = UIColor.green
+        button.addTarget(self,
+                         action: #selector(ViewController.test(sender:)),
+                         for: .touchUpInside)
+        scrollView.addSubview(button)
         
         
 //        let image1 = UIImage(named: "test1")
 //        let imageView1 = UIImageView(image: image1)
-//        imageView1.center = CGPoint(x: view.frame.size.width/2, y: view.frame.size.height/2)
+////        imageView1.center = CGPoint(x: view.frame.size.width/2, y: view.frame.size.height/2)
 //
-//        scrollView.addSubview(imageView1)
-        
-        
+//        button.addSubview(imageView1)
     }
     
-    
+    @objc func test(sender : AnyObject) {
+        print("テスト")
+    }
 }
 
