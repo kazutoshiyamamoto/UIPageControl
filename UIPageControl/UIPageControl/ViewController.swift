@@ -14,14 +14,14 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         
         let scrollView = UIScrollView(frame: CGRect(x: 0, y: 200, width: self.view.frame.size.width, height: self.view.frame.size.height))
-         // scrollViewのサイズを指定（幅は1メニューに表示するViewの幅×メニュー数）
+        // scrollViewのサイズを指定（幅は1メニューに表示するViewの幅×メニュー数）
         scrollView.contentSize = CGSize(width: self.view.frame.size.width*3, height: 200)
         scrollView.delegate = self
         // メニュー単位のスクロールを可能にする
         scrollView.isPagingEnabled = true
         // 水平方向のスクロールインジケータを非表示にする
         scrollView.showsHorizontalScrollIndicator = false
-//        scrollView.backgroundColor = UIColor.blue
+        //        scrollView.backgroundColor = UIColor.blue
         
         self.view.addSubview(scrollView)
         
@@ -36,17 +36,14 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         let button = UIButton()
         button.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 200)
         button.backgroundColor = UIColor.green
+        let image1 = UIImage(named: "test1")
+        button.setImage(image1, for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        scrollView.addSubview(button)
+        
         button.addTarget(self,
                          action: #selector(ViewController.test(sender:)),
                          for: .touchUpInside)
-        scrollView.addSubview(button)
-        
-        
-//        let image1 = UIImage(named: "test1")
-//        let imageView1 = UIImageView(image: image1)
-////        imageView1.center = CGPoint(x: view.frame.size.width/2, y: view.frame.size.height/2)
-//
-//        button.addSubview(imageView1)
     }
     
     @objc func test(sender : AnyObject) {
