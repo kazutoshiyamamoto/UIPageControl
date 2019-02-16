@@ -14,7 +14,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
          // scrollViewのサイズを指定（幅は1メニューに表示するViewの幅×メニュー数）
-        let scrollView = UIScrollView(frame: CGRect(x: 0, y: 400, width: self.view.frame.size.width, height: 200))
+        let scrollView = UIScrollView(frame: CGRect(x: 0, y: 200, width: self.view.frame.size.width, height: 200))
         scrollView.delegate = self as? UIScrollViewDelegate
         // メニュー単位のスクロールを可能にする
         scrollView.isPagingEnabled = true
@@ -23,6 +23,8 @@ class ViewController: UIViewController {
         scrollView.backgroundColor = UIColor.blue
         
         self.view.addSubview(scrollView)
+        
+        
     }
     
     
