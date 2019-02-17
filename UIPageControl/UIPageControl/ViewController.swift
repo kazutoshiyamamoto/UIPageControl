@@ -8,12 +8,15 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIScrollViewDelegate {
+class ViewController: UIViewController {
+    
+    private var scrollView: UIScrollView!
+    private var pageControl: UIPageControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let scrollView = UIScrollView(frame: CGRect(x: 0, y: 200, width: self.view.frame.size.width, height: self.view.frame.size.height))
+        scrollView = UIScrollView(frame: CGRect(x: 0, y: 200, width: self.view.frame.size.width, height: self.view.frame.size.height))
         // scrollViewのサイズを指定（幅は1メニューに表示するViewの幅×メニュー数）
         scrollView.contentSize = CGSize(width: self.view.frame.size.width*3, height: 200)
         scrollView.delegate = self
@@ -21,7 +24,6 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         scrollView.isPagingEnabled = true
         // 水平方向のスクロールインジケータを非表示にする
         scrollView.showsHorizontalScrollIndicator = false
-        //        scrollView.backgroundColor = UIColor.blue
         
         self.view.addSubview(scrollView)
         
@@ -44,10 +46,20 @@ class ViewController: UIViewController, UIScrollViewDelegate {
         button.addTarget(self,
                          action: #selector(ViewController.test(sender:)),
                          for: .touchUpInside)
+        
+        pageControl = UIPageControl(frame: CGRect(x: 0, y: 350, width: self.view.frame.size.width, height: 50))
+        pageControl.numberOfPages = 3
+        self.view.addSubview(pageControl)
     }
     
     @objc func test(sender : AnyObject) {
         print("テスト")
+    }
+}
+
+extension ViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        pageControl.currentPage = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
     }
 }
 
