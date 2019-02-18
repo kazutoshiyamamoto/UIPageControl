@@ -13,8 +13,18 @@ class ViewController: UIViewController {
     private var scrollView: UIScrollView!
     private var pageControl: UIPageControl!
     
+    struct Photo {
+        var imageName: String
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let photoList = [
+            Photo(imageName: "image1"),
+            Photo(imageName: "image2"),
+            Photo(imageName: "image3")
+        ]
         
         // scrollViewの画面表示サイズを指定
         scrollView = UIScrollView(frame: CGRect(x: 0, y: 200, width: self.view.frame.size.width, height: self.view.frame.size.height))
@@ -30,16 +40,25 @@ class ViewController: UIViewController {
         scrollView.showsHorizontalScrollIndicator = false
         self.view.addSubview(scrollView)
         
-        // scrollView上にUIImageViewをページ分追加する(今回は3ページ分)
-        let imageView1 = createImageView(x: 0, y: 0, width: self.view.frame.size.width, height: 200, image: "image1")
-        scrollView.addSubview(imageView1)
+        // scrollView上にUIImageViewをページ分（画像数分）追加する
+        for i in 0..<photoList.count {
+            let photoItem = photoList[i]
+            let imageView = createImageView(x: 0, y: 0, width: self.view.frame.size.width, height: 200, image: photoItem)
+            imageView.frame = CGRect(origin: CGPoint(x: self.view.frame.size.width * CGFloat(i), y: 0), size: CGSize(width: self.view.frame.size.width, height: 200))
+            scrollView.addSubview(imageView)
+        }
         
-        let imageView2 = createImageView(x: self.view.frame.size.width, y: 0, width: self.view.frame.size.width, height: 200, image: "image2")
-        scrollView.addSubview(imageView2)
-        
-        let imageView3 = createImageView(x: self.view.frame.size.width*2, y: 0, width: self.view.frame.size.width, height: 200, image: "image3")
-        scrollView.addSubview(imageView3)
-        
+        //        let button = UIButton()
+        //        button.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 200)
+        //        let image1 = UIImage(named: "image1")
+        //        button.setImage(image1, for: .normal)
+        //        button.imageView?.contentMode = .scaleAspectFit
+        //        scrollView.addSubview(button)
+        //
+        //        button.addTarget(self,
+        //                         action: #selector(ViewController.test(sender:)),
+        //                         for: .touchUpInside)
+
         // pageControlの表示位置とサイズの設定
         pageControl = UIPageControl(frame: CGRect(x: 0, y: 370, width: self.view.frame.size.width, height: 30))
         // pageControlのページ数を設定
@@ -54,19 +73,23 @@ class ViewController: UIViewController {
     }
     
     // UIImageViewを生成
-    func createImageView(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, image: String) -> UIImageView {
+    func createImageView(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, image: Photo) -> UIImageView {
         let imageView = UIImageView(frame: CGRect(x: x, y: y, width: width, height: height))
-        let image = UIImage(named:  image)
+        let image = UIImage(named:  image.imageName)
         imageView.image = image
         return imageView
     }
     
-//    private func layoutImages() {
-//        imageViews.enumerated().forEach { (index: Int, imageView: UIImageView) in
-//            imageView.image = images[index]
-//            imageView.frame = CGRect(x: scrollViewSize.width * CGFloat(index), y: 0, width: scrollViewSize.width, height: scrollViewSize.height)
-//        }
-//    }
+    //    @objc func test(sender : AnyObject) {
+    //        print("テスト")
+    //    }
+
+    //    private func layoutImages() {
+    //        imageViews.enumerated().forEach { (index: Int, imageView: UIImageView) in
+    //            imageView.image = images[index]
+    //            imageView.frame = CGRect(x: scrollViewSize.width * CGFloat(index), y: 0, width: scrollViewSize.width, height: scrollViewSize.height)
+    //        }
+    //    }
 }
 
 // scrollViewのページ移動に合わせてpageControlの表示も移動させる
@@ -74,29 +97,29 @@ extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         pageControl.currentPage = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
         
-//        let offsetX = scrollView.contentOffset.x
-//
-//        if (offsetX > scrollView.frame.size.width * 1.5) {
-//            // 1. モデルをアップデート。n-1 ページ目を削除して, n+2 ページ目を追加
-//            let newImage = fetcher.fetchRandomImage()
-//            images.remove(at: 0)
-//            images.append(newImage)
-//            // 2. 後述。n ページ目から n+2 ページのフレーム設定
-//            layoutImages()
-//            // 3. ビューポートの調整
-//            scrollView.contentOffset.x -= scrollViewSize.width
-//        }
-//
-//        if (offsetX < scrollView.frame.size.width * 0.5) {
-//            // 1. モデルをアップデート。n+1 ページ目を削除して, n-2 ページ目を追加
-//            let newImage = fetcher.fetchRandomImage()
-//            images.removeLast()
-//            images.insert(newImage, at: 0)
-//            // 2. 後述。n-2 ページ目から n ページのフレーム設定
-//            layoutImages()
-//            // 3. ビューポートの調整
-//            scrollView.contentOffset.x += scrollViewSize.width
-//        }
+        //        let offsetX = scrollView.contentOffset.x
+        //
+        //        if (offsetX > scrollView.frame.size.width * 1.5) {
+        //            // 1. モデルをアップデート。n-1 ページ目を削除して, n+2 ページ目を追加
+        //            let newImage = fetcher.fetchRandomImage()
+        //            images.remove(at: 0)
+        //            images.append(newImage)
+        //            // 2. 後述。n ページ目から n+2 ページのフレーム設定
+        //            layoutImages()
+        //            // 3. ビューポートの調整
+        //            scrollView.contentOffset.x -= scrollView.frame.size.width
+        //        }
+        //
+        //        if (offsetX < scrollView.frame.size.width * 0.5) {
+        //            // 1. モデルをアップデート。n+1 ページ目を削除して, n-2 ページ目を追加
+        //            let newImage = fetcher.fetchRandomImage()
+        //            images.removeLast()
+        //            images.insert(newImage, at: 0)
+        //            // 2. 後述。n-2 ページ目から n ページのフレーム設定
+        //            layoutImages()
+        //            // 3. ビューポートの調整
+        //            scrollView.contentOffset.x += scrollViewSize.width
+        //        }
     }
 }
 
