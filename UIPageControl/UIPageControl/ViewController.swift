@@ -10,43 +10,37 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    private var scrollView: UIScrollView!
-    private var pageControl: UIPageControl!
-    
     struct Photo {
         var imageName: String
     }
     
+    var photoList = [
+        Photo(imageName: "image1"),
+        Photo(imageName: "image2"),
+        Photo(imageName: "image3")
+    ]
+    
+    private var scrollView: UIScrollView!
+    private var pageControl: UIPageControl!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let photoList = [
-            Photo(imageName: "image1"),
-            Photo(imageName: "image2"),
-            Photo(imageName: "image3")
-        ]
-        
         // scrollViewの画面表示サイズを指定
-        scrollView = UIScrollView(frame: CGRect(x: 0, y: 200, width: self.view.frame.size.width, height: self.view.frame.size.height))
+        self.scrollView = UIScrollView(frame: CGRect(x: 0, y: 200, width: self.view.frame.size.width, height: 200))
         // scrollViewのサイズを指定（幅は1メニューに表示するViewの幅×ページ数）
-        scrollView.contentSize = CGSize(width: self.view.frame.size.width*3, height: 200)
+        self.scrollView.contentSize = CGSize(width: self.view.frame.size.width*3, height: self.scrollView.frame.size.height)
         // scrollViewの初期表示位置を指定
-        scrollView.contentOffset = CGPoint(x: self.view.frame.size.width, y: 0)
+        self.scrollView.contentOffset = CGPoint(x: self.view.frame.size.width, y: 0)
         // scrollViewのデリゲートになる
-        scrollView.delegate = self
+        self.scrollView.delegate = self
         // メニュー単位のスクロールを可能にする
-        scrollView.isPagingEnabled = true
+        self.scrollView.isPagingEnabled = true
         // 水平方向のスクロールインジケータを非表示にする
-        scrollView.showsHorizontalScrollIndicator = false
+        self.scrollView.showsHorizontalScrollIndicator = false
         self.view.addSubview(scrollView)
         
-        // scrollView上にUIImageViewをページ分（画像数分）追加する
-        for i in 0..<photoList.count {
-            let photoItem = photoList[i]
-            let imageView = createImageView(x: 0, y: 0, width: self.view.frame.size.width, height: 200, image: photoItem)
-            imageView.frame = CGRect(origin: CGPoint(x: self.view.frame.size.width * CGFloat(i), y: 0), size: CGSize(width: self.view.frame.size.width, height: 200))
-            scrollView.addSubview(imageView)
-        }
+        // scrollView上にUIImageViewを配置する
+        self.setUpImageView()
         
         //        let button = UIButton()
         //        button.frame = CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 200)
@@ -58,18 +52,6 @@ class ViewController: UIViewController {
         //        button.addTarget(self,
         //                         action: #selector(ViewController.test(sender:)),
         //                         for: .touchUpInside)
-
-        // pageControlの表示位置とサイズの設定
-        pageControl = UIPageControl(frame: CGRect(x: 0, y: 370, width: self.view.frame.size.width, height: 30))
-        // pageControlのページ数を設定
-        pageControl.numberOfPages = 3
-        // pageControlの初期位置
-        pageControl.currentPage = 1
-        // pageControlのドットの色
-        pageControl.pageIndicatorTintColor = UIColor.lightGray
-        // pageControlの現在のページのドットの色
-        pageControl.currentPageIndicatorTintColor = UIColor.black
-        self.view.addSubview(pageControl)
     }
     
     // UIImageViewを生成
@@ -80,46 +62,51 @@ class ViewController: UIViewController {
         return imageView
     }
     
+    // photoListの要素分UIImageViewをscrollViewに並べる
+    func setUpImageView() {
+        for i in 0 ..< self.photoList.count {
+            let photoItem = self.photoList[i]
+            let imageView = createImageView(x: 0, y: 0, width: self.view.frame.size.width, height: self.scrollView.frame.size.height, image: photoItem)
+            imageView.frame = CGRect(origin: CGPoint(x: self.view.frame.size.width * CGFloat(i), y: 0), size: CGSize(width: self.view.frame.size.width, height: self.scrollView.frame.size.height))
+            self.scrollView.addSubview(imageView)
+        }
+    }
+    
     //    @objc func test(sender : AnyObject) {
     //        print("テスト")
     //    }
-
-    //    private func layoutImages() {
-    //        imageViews.enumerated().forEach { (index: Int, imageView: UIImageView) in
-    //            imageView.image = images[index]
-    //            imageView.frame = CGRect(x: scrollViewSize.width * CGFloat(index), y: 0, width: scrollViewSize.width, height: scrollViewSize.height)
-    //        }
-    //    }
 }
 
-// scrollViewのページ移動に合わせてpageControlの表示も移動させる
+// scrollViewのページ移動に合わせて画像がループするような順番で表示させる
 extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        pageControl.currentPage = Int(scrollView.contentOffset.x / scrollView.frame.size.width)
+        let offsetX = self.scrollView.contentOffset.x
         
-        //        let offsetX = scrollView.contentOffset.x
-        //
-        //        if (offsetX > scrollView.frame.size.width * 1.5) {
-        //            // 1. モデルをアップデート。n-1 ページ目を削除して, n+2 ページ目を追加
-        //            let newImage = fetcher.fetchRandomImage()
-        //            images.remove(at: 0)
-        //            images.append(newImage)
-        //            // 2. 後述。n ページ目から n+2 ページのフレーム設定
-        //            layoutImages()
-        //            // 3. ビューポートの調整
-        //            scrollView.contentOffset.x -= scrollView.frame.size.width
-        //        }
-        //
-        //        if (offsetX < scrollView.frame.size.width * 0.5) {
-        //            // 1. モデルをアップデート。n+1 ページ目を削除して, n-2 ページ目を追加
-        //            let newImage = fetcher.fetchRandomImage()
-        //            images.removeLast()
-        //            images.insert(newImage, at: 0)
-        //            // 2. 後述。n-2 ページ目から n ページのフレーム設定
-        //            layoutImages()
-        //            // 3. ビューポートの調整
-        //            scrollView.contentOffset.x += scrollViewSize.width
-        //        }
+        if (offsetX > self.scrollView.frame.size.width * 1.5) {
+            // photoListの先頭の要素を末尾の要素にする
+            let sortedPhoto = self.photoList[0]
+            self.photoList.append(sortedPhoto)
+            // photoListの先頭の要素削除
+            self.photoList.removeFirst()
+            // 順序が入れ替えられたphotoListで描画
+            self.setUpImageView()
+            
+            // contentOffsetの調整
+            self.scrollView.contentOffset.x -= self.scrollView.frame.size.width
+        }
+        
+        if (offsetX < self.scrollView.frame.size.width * 0.5) {
+            // photoListの末尾の要素を先頭の要素にする
+            let sortedPhoto = self.photoList[2]
+            self.photoList.insert(sortedPhoto, at: 0)
+            // photoListの末尾の要素削除
+            self.photoList.removeLast()
+            // 順序が入れ替えられたphotoListで描画
+            self.setUpImageView()
+            
+            // contentOffsetの調整
+            self.scrollView.contentOffset.x += self.scrollView.frame.size.width
+        }
     }
 }
 
